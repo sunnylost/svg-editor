@@ -55,8 +55,9 @@ export function Node({ node, level }: { node: Element | null; level: number }) {
         >
             <li className="node-tag relative flex items-center gap-1 text-xs bg-transparent">
                 {node.children.length > 1 && <Arrow onChange={handleChange} />}
-                {`<${node.tagName}`}
-                <div className="overflow-hidden flex gap-4">
+
+                <div className="node-tag-inner overflow-hidden inline-block">
+                    <span className="tab">{`<${node.tagName}`}</span>
                     {attributes.map((attr) => (
                         <AttrNode
                             key={attr.name + attr.value}
@@ -64,8 +65,8 @@ export function Node({ node, level }: { node: Element | null; level: number }) {
                             onChange={(e) => handleAttrChange(attr, e)}
                         />
                     ))}
+                    <span>{`>`}</span>
                 </div>
-                {`>`}
             </li>
             {node.children.length > 1 &&
                 expand &&

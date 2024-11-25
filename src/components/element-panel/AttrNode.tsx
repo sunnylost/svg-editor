@@ -30,9 +30,8 @@ export function AttrNode({ attr, onChange }: AttrNodeProp) {
         })
     }, [editMode])
     const handleEnter = useCallback(
-        (e: KeyboardEvent<HTMLSpanElement>) => {
-            e.key === 'Enter' && handleSubmit()
-        },
+        (e: KeyboardEvent<HTMLSpanElement>) =>
+            e.key === 'Enter' && handleSubmit(),
         [editMode],
     )
     const handleBlur = useCallback(
@@ -73,12 +72,11 @@ export function AttrNode({ attr, onChange }: AttrNodeProp) {
             {content}
         </span>
     ) : (
-        <span
-            className="attr flex items-center"
-            onDoubleClick={handleDoubleClick}
-        >
-            <span className="attr-name">{attr.name}</span>="
-            <span className="attr-value text-sky-500">{attr.value}</span>"
+        <span className="attr" onDoubleClick={handleDoubleClick}>
+            <span className="attr-name">{attr.name}</span>
+            <span>{'="'}</span>
+            <span className="attr-value text-sky-500">{attr.value}</span>
+            <span>{'"'}</span>
         </span>
     )
 }
