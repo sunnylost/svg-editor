@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { combine } from 'zustand/middleware'
 
-type State = {
+export type NodeState = {
     activeNodeId: string
     activeNode: Element | null
 }
@@ -11,7 +11,7 @@ export const nodeStore = create(
         {
             activeNodeId: '',
             activeNode: null,
-        } as State,
+        } as NodeState,
         (set) => {
             return {
                 updateActiveNode(id: string, node: Element | null) {

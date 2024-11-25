@@ -1,35 +1,53 @@
 import { create } from 'zustand'
 import { combine } from 'zustand/middleware'
+import { importSVGElement } from '@/core/util'
+import { Core } from '@/core'
+import { MODE, Mode } from '@/store/modes'
 
-type SVGState = {
-    SVGElementSource: string
-    SVGElement: Element | null
+export * from './modes'
+
+type SVGStoreState = {
+    core: Core
+    mode: Mode
+    svg: SVGElement | null
 }
 
-export const svgStore = create(
+export const useSvgStore = create(
     combine(
         {
-            SVGElementSource: '',
-            SVGElement: null,
-        } as SVGState,
+            core: new Core(),
+            mode: MODE.move,
+            svg: null,
+        } as SVGStoreState,
         (set, get) => {
             return {
-                // raw svg string
-                updateSVGElement(rawString: string) {
+                import(rawString: string) {
                     set((state) => {
-                        const parser = new DOMParser()
+                        const svgElement = importSVGElement(rawString)
+                        const core = get().core
+
+                        core.gRef?.append(svgElement)
 
                         return {
                             ...state,
-                            SVGElementSource: rawString,
-                            SVGElement: parser.parseFromString(
-                                rawString,
-                                'image/svg+xml',
-                            ).children[0],
+                            svg: svgElement,
                         }
                     })
+                },
+
+                updateMode(mode: Mode) {
+                    set((state) => ({
+                        ...state,
+                        mode,
+                    }))
                 },
             }
         },
     ),
 )
+
+export const useSVGCore = () => useSvgStore((state) => state.core)
+export const useSVGMode = () => useSvgStore((state) => state.mode)
+export const useSVGElement = () => useSvgStore((state) => state.svg)
+export const useSVGImport = () => useSvgStore((state) => state.import)
+export const useUpdateSVGMode = () => useSvgStore((state) => state.updateMode)

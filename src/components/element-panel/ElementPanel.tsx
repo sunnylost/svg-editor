@@ -1,13 +1,13 @@
 import { useState } from 'react'
-import { svgStore } from '@/store'
+import { useSVGElement } from '@/store'
 import { Node } from './Node'
 
-export function ElementPanel() {
-    const { SVGElement } = svgStore()
+export function ElementPanel({ className }: { className?: string }) {
+    const svgElement = useSVGElement()
     const [display, setDisplay] = useState(false)
 
     return (
-        <>
+        <div className={`w-full ${className}`}>
             <div
                 className="cursor-pointer"
                 onClick={() => setDisplay((v) => !v)}
@@ -15,12 +15,12 @@ export function ElementPanel() {
                 Element
             </div>
             <div
-                className={`${display ? 'h-0' : 'h-1/2'} w-full border transition-all overflow-hidden`}
+                className={`${display ? 'h-0' : 'h-full'} border transition-all overflow-hidden`}
             >
                 <div className="h-full overflow-auto">
-                    <Node node={SVGElement} level={0} />
+                    <Node node={svgElement} level={0} />
                 </div>
             </div>
-        </>
+        </div>
     )
 }

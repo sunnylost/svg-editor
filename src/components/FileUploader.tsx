@@ -1,8 +1,8 @@
 import { ChangeEvent } from 'react'
-import { svgStore } from '@/store'
+import { useSVGImport } from '@/store'
 
 export function FileUploader() {
-    const { updateSVGElement } = svgStore()
+    const importSVG = useSVGImport()
 
     function handleFile(e: ChangeEvent<HTMLInputElement>) {
         const file = e.target.files?.[0]
@@ -12,9 +12,10 @@ export function FileUploader() {
         }
 
         const reader = new FileReader()
-        reader.addEventListener('load', () => {
-            reader.result && updateSVGElement(reader.result.toString())
-        })
+        reader.addEventListener(
+            'load',
+            () => reader.result && importSVG(reader.result.toString()),
+        )
         reader.readAsText(file)
     }
 
