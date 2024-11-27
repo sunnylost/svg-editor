@@ -93,6 +93,16 @@ body,
     height: 100%;
 }
 
+@property --indent {
+    syntax: '<length>';
+    inherits: false;
+    initial-value: '0px';
+}
+
+.node-wrap {
+    margin-left: var(--indent);
+}
+
 .node-wrap.selected > .node-tag::before {
     content: '';
     position: absolute;

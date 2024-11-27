@@ -11,8 +11,18 @@ export function Arrow({ onChange }: { onChange?: (toggle: boolean) => void }) {
     }
 
     return active ? (
-        <ChevronDown className="cursor-pointer w-16" onClick={toggle} />
+        <ChevronDown
+            className="cursor-pointer"
+            width={16}
+            height={16}
+            onClick={toggle}
+        />
     ) : (
-        <ChevronRight className="cursor-pointer w-16" onClick={toggle} />
+        <ChevronRight
+            className="cursor-pointer"
+            width={16}
+            height={16}
+            onClick={toggle}
+        />
     )
 }

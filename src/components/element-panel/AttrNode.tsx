@@ -51,9 +51,11 @@ export function AttrNode({ attr, onChange }: AttrNodeProp) {
         if (editMode && valueRef.current) {
             const range = document.createRange()
             const textNode = valueRef.current.firstChild
-            textNode && range.setStart(textNode, attr.name.length + 2)
-            textNode &&
+
+            if (textNode) {
+                range.setStart(textNode, attr.name.length + 2)
                 range.setEnd(textNode, attr.name.length + attr.value.length + 2)
+            }
 
             const selection = getSelection()
             selection?.removeAllRanges()

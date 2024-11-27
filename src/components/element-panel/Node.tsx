@@ -10,6 +10,19 @@ import { nodeStore } from '@/store'
 import { Arrow } from './Arrow'
 import { AttrNode, Attr } from './AttrNode'
 
+function isContains(attrList: Attr[], name: string) {
+    return attrList.some((attr) => attr.name === name)
+}
+
+function updateAttr(attrList: Attr[], name: string, value: string) {
+    attrList.some((attr) => {
+        if (attr.name === name) {
+            attr.value = value
+            return true
+        }
+    })
+}
+
 export function Node({ node, level }: { node: Element | null; level: number }) {
     const { activeNodeId, updateActiveNode } = nodeStore()
     const id = useId()
@@ -23,18 +36,24 @@ export function Node({ node, level }: { node: Element | null; level: number }) {
     }, [])
 
     useEffect(() => {
-        const attributes: Attr[] = []
+        const _attributes: Attr[] = [...attributes]
 
         if (node?.attributes) {
             for (const attr of node.attributes) {
-                attributes.push({
-                    name: attr.name,
-                    value: attr.value,
-                })
+                if (isContains(_attributes, attr.name)) {
+                    updateAttr(_attributes, attr.name, attr.value)
+                } else {
+                    _attributes.push({
+                        name: attr.name,
+                        value: attr.value,
+                    })
+                }
             }
+        } else {
+            _attributes.length = 0
         }
 
-        setAttributes(attributes)
+        setAttributes(_attributes)
     }, [node, isChange])
 
     const selectNode = useCallback((e: MouseEvent<HTMLElement>) => {
@@ -50,10 +69,13 @@ export function Node({ node, level }: { node: Element | null; level: number }) {
 
     return node ? (
         <ol
-            className={`node-wrap relative cursor-default ml-12 ${isSelected ? 'selected' : ''}`}
+            className={`node-wrap relative cursor-default ${isSelected ? 'selected' : ''}`}
+            style={{
+                '--indent': `${level * 20}px`,
+            }}
             onClick={selectNode}
         >
-            <li className="node-tag relative flex items-center gap-1 text-xs bg-transparent">
+            <li className="node-tag my-2 relative flex items-center text-xs bg-transparent">
                 {node.children.length > 1 && <Arrow onChange={handleChange} />}
 
                 <div className="node-tag-inner overflow-hidden inline-block">
@@ -65,15 +87,13 @@ export function Node({ node, level }: { node: Element | null; level: number }) {
                             onChange={(e) => handleAttrChange(attr, e)}
                         />
                     ))}
-                    <span>{`>`}</span>
+                    {`>`}
                 </div>
             </li>
             {node.children.length > 1 &&
                 expand &&
                 [...node.children].map((child, i) => (
-                    <li key={child.id + i}>
-                        <Node node={child} level={level + 1} />
-                    </li>
+                    <Node key={child.id + i} node={child} level={level + 1} />
                 ))}
         </ol>
     ) : null
